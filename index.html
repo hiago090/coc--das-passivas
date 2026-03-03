@@ -74,7 +74,7 @@
 <br>
 
 <button onclick="registrar()">Registrar</button>
-<button class="reset" onclick="reiniciarMes()">Reiniciar Mês</button>
+<button class="reset" onclick="reiniciarMes()">Fechar Mês</button>
 
 <h2>Contagem do Mês</h2>
 
@@ -126,20 +126,20 @@
       contagem[r.nome]++;
     });
 
-    document.getElementById("Hiago").innerHTML = `
-      <strong>Hiago</strong><br>${contagem.Hiago}
-    `;
-    document.getElementById("Eduarda").innerHTML = `
-      <strong>Eduarda</strong><br>${contagem.Eduarda}
-    `;
-    document.getElementById("Luana").innerHTML = `
-      <strong>Luana</strong><br>${contagem.Luana}
-    `;
-    document.getElementById("Iris").innerHTML = `
-      <strong>Iris</strong><br>${contagem.Iris}
-    `;
+    document.getElementById("Hiago").innerHTML =
+      `<strong>Hiago</strong><br>${contagem.Hiago}`;
+
+    document.getElementById("Eduarda").innerHTML =
+      `<strong>Eduarda</strong><br>${contagem.Eduarda}`;
+
+    document.getElementById("Luana").innerHTML =
+      `<strong>Luana</strong><br>${contagem.Luana}`;
+
+    document.getElementById("Iris").innerHTML =
+      `<strong>Iris</strong><br>${contagem.Iris}`;
 
     let lista = "";
+
     registros.forEach(r => {
       lista += `
         <div class="card">
@@ -148,10 +148,9 @@
       `;
     });
 
-    historicoMensal.forEach((mes, index) => {
+    historicoMensal.forEach(mes => {
       lista += `
         <div class="card">
-          <strong>Mês ${index + 1} Finalizado:</strong><br>
           ${mes}
         </div>
       `;
@@ -162,6 +161,17 @@
 
   function reiniciarMes() {
     if (registros.length === 0) return;
+
+    const agora = new Date();
+
+    const meses = [
+      "Janeiro", "Fevereiro", "Março", "Abril",
+      "Maio", "Junho", "Julho", "Agosto",
+      "Setembro", "Outubro", "Novembro", "Dezembro"
+    ];
+
+    const nomeMes = meses[agora.getMonth()];
+    const ano = agora.getFullYear();
 
     let contagem = {
       Hiago: 0,
@@ -175,6 +185,7 @@
     });
 
     let resumo = `
+      <strong>${nomeMes} ${ano}</strong><br>
       Hiago: ${contagem.Hiago}<br>
       Eduarda: ${contagem.Eduarda}<br>
       Luana: ${contagem.Luana}<br>
