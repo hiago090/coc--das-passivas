@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cocô das Passiva 💩</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: hotpink;
+    }
+
+    select, button {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+
+    button {
+      background: hotpink;
+      color: white;
+      cursor: pointer;
+    }
+
+    .reset {
+      background: red;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      max-width: 600px;
+      margin: 20px auto;
+    }
+
+    .card {
+      background: #222;
+      padding: 20px;
+      border-radius: 12px;
+      font-size: 18px;
+    }
+
+    .history {
+      margin-top: 40px;
+      text-align: left;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+
+<h1>💩 Cocô das Passiva 💩</h1>
+
+<select id="nome">
+  <option value="Hiago">Hiago</option>
+  <option value="Eduarda">Eduarda</option>
+  <option value="Luana">Luana</option>
+  <option value="Iris">Iris</option>
+</select>
+
+<br>
+
+<button onclick="registrar()">Registrar</button>
+<button class="reset" onclick="reiniciarMes()">Reiniciar Mês</button>
+
+<h2>Contagem do Mês</h2>
+
+<div class="grid">
+  <div class="card" id="Hiago"></div>
+  <div class="card" id="Eduarda"></div>
+  <div class="card" id="Luana"></div>
+  <div class="card" id="Iris"></div>
+</div>
+
+<div class="history">
+  <h2>Histórico</h2>
+  <div id="historico"></div>
+</div>
+
+<script>
+  let registros = JSON.parse(localStorage.getItem("registros")) || [];
+  let historicoMensal = JSON.parse(localStorage.getItem("historicoMensal")) || [];
+
+  function salvar() {
+    localStorage.setItem("registros", JSON.stringify(registros));
+    localStorage.setItem("historicoMensal", JSON.stringify(historicoMensal));
+  }
+
+  function registrar() {
+    const nome = document.getElementById("nome").value;
+    const agora = new Date();
+
+    const registro = {
+      nome: nome,
+      data: agora.toLocaleDateString(),
+      hora: agora.toLocaleTimeString()
+    };
+
+    registros.push(registro);
+    salvar();
+    atualizarTela();
+  }
+
+  function atualizarTela() {
+    let contagem = {
+      Hiago: 0,
+      Eduarda: 0,
+      Luana: 0,
+      Iris: 0
+    };
+
+    registros.forEach(r => {
+      contagem[r.nome]++;
+    });
+
+    document.getElementById("Hiago").innerHTML = `
+      <strong>Hiago</strong><br>${contagem.Hiago}
+    `;
+    document.getElementById("Eduarda").innerHTML = `
+      <strong>Eduarda</strong><br>${contagem.Eduarda}
+    `;
+    document.getElementById("Luana").innerHTML = `
+      <strong>Luana</strong><br>${contagem.Luana}
+    `;
+    document.getElementById("Iris").innerHTML = `
+      <strong>Iris</strong><br>${contagem.Iris}
+    `;
+
+    let lista = "";
+    registros.forEach(r => {
+      lista += `
+        <div class="card">
+          ${r.nome} - ${r.data} às ${r.hora}
+        </div>
+      `;
+    });
+
+    historicoMensal.forEach((mes, index) => {
+      lista += `
+        <div class="card">
+          <strong>Mês ${index + 1} Finalizado:</strong><br>
+          ${mes}
+        </div>
+      `;
+    });
+
+    document.getElementById("historico").innerHTML = lista;
+  }
+
+  function reiniciarMes() {
+    if (registros.length === 0) return;
+
+    let contagem = {
+      Hiago: 0,
+      Eduarda: 0,
+      Luana: 0,
+      Iris: 0
+    };
+
+    registros.forEach(r => {
+      contagem[r.nome]++;
+    });
+
+    let resumo = `
+      Hiago: ${contagem.Hiago}<br>
+      Eduarda: ${contagem.Eduarda}<br>
+      Luana: ${contagem.Luana}<br>
+      Iris: ${contagem.Iris}
+    `;
+
+    historicoMensal.push(resumo);
+    registros = [];
+    salvar();
+    atualizarTela();
+  }
+
+  atualizarTela();
+</script>
+
+</body>
+</html>
